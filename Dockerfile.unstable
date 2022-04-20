@@ -1,0 +1,14 @@
+FROM k0d3r1s/alpine:unstable
+
+COPY ./src/dist/traefik /usr/local/bin/traefik
+COPY entrypoint.sh /
+
+RUN \
+	set -eux \
+&&  apk upgrade --no-cache --update --no-progress --available -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+&&	chmod +x /usr/local/bin/traefik \
+&&	apk del --purge --no-cache liburing-dev
+
+EXPOSE 80
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["traefik"]

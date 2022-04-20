@@ -1,0 +1,26 @@
+FROM nikolaik/python-nodejs:python3.10-nodejs17-alpine
+# Current Active LTS release according to (https://nodejs.org/en/about/releases/)
+
+ENV WEBUI_DIR /src/webui
+ARG ARG_PLATFORM_URL=https://pilot.traefik.io
+ENV PLATFORM_URL=${ARG_PLATFORM_URL}
+RUN mkdir -p $WEBUI_DIR
+
+COPY package.json $WEBUI_DIR/
+# COPY package-lock.json $WEBUI_DIR/
+
+WORKDIR $WEBUI_DIR
+RUN npm install -g npm@next-8
+# RUN npm install -g @quasar/cli
+# RUN npm install -g npm-check-updates
+# RUN npm-check-updates -u
+RUN npm install --legacy-peer-deps
+# RUN corepack enable
+# RUN yarn set version 3.1.1
+# RUN yarn up
+
+COPY . $WEBUI_DIR/
+
+EXPOSE 8080
+
+# RUN npm run lint
